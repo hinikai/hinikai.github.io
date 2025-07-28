@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <title>倪楷-个人博客-Block Formatting Contexts(BFC)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/blog.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+</head>
+<body>
+
+<div id="layout" class="post-detail">
+<h1>Block Formatting Contexts(BFC)</h1>
+<div class="sub">2012年3月16日</div>
+<p>Block Formatting Contexts（简称BFC）在页面构建中，我觉得是比较重要的东西，如果对它做过深入了解，一些各浏览器部分奇怪的BUG也会迎刃而解。<a href="http://www.w3.org/TR/CSS21/visuren.html#block-formatting" target="_blank" rel="noopener">W3C中对BFC做了个解释</a>。在可视化格式模型中，BFC扮演了很重要的角色,它决定了元素如何对其内容进行定位，以及与其他元素的关系和相互作用。所以对于页面构建者来说，理清flow，floats，clear和margins之间的关系，对它们有些深入理解是很重要的事。<br>要触发BFC，至少要满足以下一个条件：</p>
+<ul>
+<li>float的值是除了”none”的其他值，</li>
+<li>overflow的值是除了”visible”的其他值，</li>
+<li>display的值是”table-cell”,”table-caption”,”inline-block”，</li>
+<li>position的值是除了”static”和”relative”的其他值。</li>
+</ul>
+<p>那BFC到底有什么特别的地方呢？</p>
+<p>在创建了 Block Formatting Context 的元素中:</p>
+<p>其子元素会一个接一个地放置。垂直方向上他们的起点是一个包含块的顶部，两个相邻的元素之间的垂直距离取决于 ‘margin’ 特性。在BFC中相邻的块级元素的垂直边距会折叠（collapse）。<br>每一个元素左外边与包含块的左边相接触（对于从右到左的格式化，右外边接触右边）， 即使存在浮动也是如此（尽管一个元素的内容区域会由于浮动而压缩），除非这个元素也创建了一个新的BFC(这种情况这个元素由于浮动本身就会变得更窄)。<br>通过以上可以总结出两点：</p>
+<ol>
+<li>BFC可以包含浮动元素，并且不会和浮动元素重叠。</li>
+<li>BFC里面的元素的垂直边距不会和BFC的外边距叠加。</li>
+</ol>
+<p>在IE 6中, hasLayout创建(或多或少)了一个BFC。在这里先不讨论有关haslayout的一些知识了。<br>关于BFC的一些误区：</p>
+<p>以前在网上看到有人总结说BFC可以阻止边距叠加，这种说法太绝对了，比如如下：<br>box A<br>box B</p>
+<pre><code>div{overflow:hidden;margin:10px;}
+</code></pre><p>这时候A、B的边距还是会叠加的，是10px。但是如果样式是这样的话：</p>
+<pre><code>div{float:left:margin:10px;}
+</code></pre><p>或</p>
+<pre><code>div{display:inline-block;margin:10px;}
+</code></pre><p>A、B的边距就是20px了，此时就没出现边距叠加。其实这里会叠加的margin是BFC里的子元素的margin和它的叠加（即第一个节点的margin-top和最后一个节点的margin-bottom），不会影响到BFC自身的叠加。这时有人会以为，这里是因为创建了BFC，所以才阻止了边距叠加。其实这时候边距不叠加是它本身没有满足<a href="http://www.w3.org/TR/CSS2/box.html#collapsing-margins" target="_blank" rel="noopener">W3C中关于边距叠加的条件</a>。</p>
+<p>2个元素边距叠加发生的条件是：</p>
+<ul>
+<li>只有2个元素都是块级内元素才会存在边距叠加。</li>
+<li>没有其他模块，没有间隙，没有padding，没有边框把它们分隔开。</li>
+<li>垂直相邻的边距才会叠加。</li>
+</ul>
+<p>所以上述的两个A、B模块显然是没有满足第一个条件，所以不会发生边距叠加，与它是不是BFC模块无关。参考文章：<a href="http://www.css-101.org/block-formatting-contexts/index.php" target="_blank" rel="noopener">http://www.css-101.org/block-formatting-contexts/index.php</a></p>
+
+</div>
+
+<div class="footer">
+<h2><a href="/blog">index</a> · <a href="http://weibo.com/340144392/">@胖嘟嘟的骨头</a> <a href="http://www.beian.miit.gov.cn" target="_blank"></a></h2>
+</div>
+
+
+<div style="display:none;">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fcfc45206369293d7cf0fc8142ea83f90' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+
+
+</body>
+</html>
