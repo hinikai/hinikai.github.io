@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <title>倪楷-个人博客-node进程管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/blog.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+</head>
+<body>
+
+<div id="layout" class="post-detail">
+<h1>node进程管理</h1>
+<div class="sub">2016年8月19日</div>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>node是在V8引擎(chrome浏览器的内核)上构建，所以跟浏览器类似，javascrit是运行在单个进程的单个线程上。</p>
+<h2 id="单线程优点"><a href="#单线程优点" class="headerlink" title="单线程优点"></a>单线程优点</h2><p>所以每来一个请求，都用同一个常驻内存的线程进行处理。php是每来一个请求，都要创建一个线程来响应。从这点上看node在连接上比php是有优势的。</p>
+<h2 id="单线程缺点"><a href="#单线程缺点" class="headerlink" title="单线程缺点"></a>单线程缺点</h2><p>单进程，单线程，只支持单核CPU，不能充分的利用多核CPU服务器。一旦这个进程崩掉，那么整个web服务就崩掉了。</p>
+<h2 id="使用多进程"><a href="#使用多进程" class="headerlink" title="使用多进程"></a>使用多进程</h2><p>不过这个缺点可以使用多进程来弥补，一般cpu有几个核我们就可以启用几个进程，这样就可以充分利用cpu。如可以启用多进程，监听不同端口，然后通过webserver(如nginx)做负载均衡来调用。同时也可以通过创建子进程的方式来实现，node可以痛过child_process.fork()来创建子进程。解决多核cpu的利用率问题。node在v0.8版本后引入了cluster模块，用以处理进程的健壮性问题。如下示例:</p>
+<pre><code>if (cluster.isMaster) {
+    for (var i = 0; i &lt; numCPUs; i++) {
+        cluster.fork();
+    }
+    cluster.on(&apos;exit&apos;, function(worker, code, signal) {
+        cluster.fork();
+        console.log(&apos;worker &apos; + worker.process.pid + &apos; died&apos;);
+    });
+} else {
+    http.createServer(function (req, res) {
+        res.writeHead(200, {&apos;Content-Type&apos;: &apos;text/plain&apos;});
+        res.end(&apos;Hello World!&apos;);
+        console.log(&apos;Worker #&apos; + cluster.worker.id + &apos; make a response&apos;);
+    }).listen(3000, &apos;127.0.0.1&apos;);
+}
+</code></pre><p>我的电脑是4个核的，所以会创建4个子进程，此时查看进程发现有5个进程，即1个是主进程，4个子进程，可看出每个进程初始就占了大约10M的内存。<br><img src="https://nikai-us.oss-cn-beijing.aliyuncs.com/other/process.png" alt="node进程"></p>
+<h2 id="注意的地方"><a href="#注意的地方" class="headerlink" title="注意的地方"></a>注意的地方</h2><p>再讨论多进程好处的时候我们也要注意一些问题，因为node在设计之初就是比较轻量级的，所以我们还是要保证node要足够的轻。</p>
+<blockquote>
+<p>node的这些子进程每个都是v8下一个完全独立的新实例，假定每fork一个新的个进程都会消耗30ms和10M的内存，所以我们也不能创建过多的进程。</p>
+</blockquote>
+<p>最后，我们要注意的是多进程，每个进程都是一个独立的实例，并且每个实例只能处理它所连接上的。所以如果同时有多个请求过来，由不同的进程来进行处理，但它们需要共享一些状态，可以通过一些类似redis这样的缓存来共享存储。</p>
+
+</div>
+
+<div class="footer">
+<h2><a href="/blog">index</a> · <a href="http://weibo.com/340144392/">@胖嘟嘟的骨头</a> <a href="http://www.beian.miit.gov.cn" target="_blank"></a></h2>
+</div>
+
+
+<div style="display:none;">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fcfc45206369293d7cf0fc8142ea83f90' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+
+
+</body>
+</html>

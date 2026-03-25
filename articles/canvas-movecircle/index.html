@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <title>倪楷-个人博客-canvas绘制运动的轨迹效果</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/blog.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+</head>
+<body>
+
+<div id="layout" class="post-detail">
+<h1>canvas绘制运动的轨迹效果</h1>
+<div class="sub">2014年6月15日</div>
+<p>由于项目需要绘制类似关于运动轨迹、迁徙的效果，如echarts的这个功能，看着就很绚<a href="http://echarts.baidu.com/doc/example/map11.html" target="_blank" rel="noopener">模拟迁徙</a>，所以进去看echart的源码，发现底层的绘制库用的是zrender，进而去查看了zrender的源码。</p>
+<p>发现其实只是用到普通的画圆，运动过程通过叠加不同透明度的圆，让人看上去有个运动后留下运动轨迹的效果。自己写了个简易的demo。<a href="http://hinikai.github.io/code/canvas/movecircle.html" target="_blank">demo</a></p>
+<iframe src="http://hinikai.github.io/code/canvas/movecircle.html" height="500"></iframe>
+
+<p>主要用到的就2个关键技术点：</p>
+<ol>
+<li>ctx.globalAlpha = ‘0.85’; //设置主canvas的绘制透明度</li>
+<li>临时canvas备份主canvas的历史图像，再叠加到主canvas上。</li>
+</ol>
+<p>绘制过程：</p>
+<ol>
+<li>首先需要知道动画的起终点，然后绘制移动的圆，计算出中间的点的位置，定时绘制，每次绘制都移动一点位置，达到运动的效果，这是普通的运动的圆的效果。</li>
+<li>绘制的时候设置当前canvas的透明度globalAlpha 为0.85</li>
+<li>需要给运动中的圆加上运动过程的轨迹效果，这里是用到一个临时的canvas来配合，每次需要绘制一个新圆之前都把之前的图像给绘制到临时的canvas中，然后等新圆画完后再把临时canvas的图像绘制回主canvas中，轨迹的效果。</li>
+<li>这里关键的就是由于设置了globalAlpha，每次绘制一次备份的canvas图片都会把它的透明度设为0.85，达到了逐渐减小透明度的效果，直到为0，这样整体看上去效果就是运动的圆的后面跟的圆逐个透明度减小，知道为0，达到了运动轨迹的效果。</li>
+</ol>
+<p>这是绘制轨迹的基本技术，然后，就可以把它运用在地图上实现轨迹的运动效果。<a href="http://renqi.baidu.com/qiumi/" target="_blank" rel="noopener">球迷人气</a>。后续会更详细讲数据可视化在地图api中的尝试。<br><img src="https://nikai-us.oss-cn-beijing.aliyuncs.com/other/movecircle.png" alt="球迷人气中的球迷迁徙效果"></p>
+
+</div>
+
+<div class="footer">
+<h2><a href="/blog">index</a> · <a href="http://weibo.com/340144392/">@胖嘟嘟的骨头</a> <a href="http://www.beian.miit.gov.cn" target="_blank"></a></h2>
+</div>
+
+
+<div style="display:none;">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fcfc45206369293d7cf0fc8142ea83f90' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+
+
+</body>
+</html>

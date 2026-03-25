@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <title>倪楷-个人博客-跨域资源共享(Cross-OriginResource Sharing)实现Ajax跨域请求</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/blog.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+</head>
+<body>
+
+<div id="layout" class="post-detail">
+<h1>跨域资源共享(Cross-OriginResource Sharing)实现Ajax跨域请求</h1>
+<div class="sub">2012年9月11日</div>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>随着 Web2.0 和 社交网络 的兴起，Web应用对跨域访问的需求也越来越多，但是在脚本中进行跨域请求是受安全性限制的。比如分布式应用，主网站和二级域名网站的通信等等。</p>
+<p>许多人还没意识到当前几乎所有的浏览器（Internet Explorer 8+，Firefox 3.5+， Safari 4+和 Chrome）都可通过名为跨域资源共享（Cross-Origin ResourceSharing）的协议支持ajax跨域调用。 对一个简单的请求，没有自定义头部，要么使用GET，要么使用POST，它的主体是text/plain,请求用一个名叫Orgin的额外的头部发送。Origin头部包含请求页面的头部（协议，域名，端口），这样服务器可以很容易的决定它是否应该提供响应。</p>
+<h2 id="跨域资源共享-CORS"><a href="#跨域资源共享-CORS" class="headerlink" title="跨域资源共享(CORS)"></a>跨域资源共享(CORS)</h2><p><a href="http://en.wikipedia.org/wiki/Cross-origin_resource_sharing" target="_blank" rel="noopener">wiki</a> </p>
+<p><a href="http://www.w3.org/TR/cors/" target="_blank" rel="noopener">CORS的W3C说明书</a></p>
+<p>如果你正在寻找有关如何在各种常见的web服务器上建立CORS的特定信息，那就查看<a href="http://enable-cors.org/" target="_blank" rel="noopener">启用CORS分享网站</a>。网站解释了如何在各种web服务器上从Apache到IIS再到 ExpressJS和其他来建立Access-Control-Allow-Origin response头文件。但它没有详细介绍如何建立其他的response头文件或怎样处理预检请求。</p>
+<p>最后，推荐阅读Monsur Hossain的<a href="http://www.html5rocks.com/en/tutorials/cors/" target="_blank" rel="noopener">非常好的利用CORS教程</a>，在HTML5 Rocks网站上可以找到。虽然主要着眼于客户端通信，但Monsur浏览了各种各样的response头文件类型以及如何处理像PUT或DELETE这样复杂的请求。这个教程并不特定于所有的web服务器，但是当结合enable-cors.org的说明，它应该就能启动和运行了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>跨域资源共享，该规范地址</p>
+<p><a href="http://www.w3.org/TR/access-control/" target="_blank" rel="noopener">http://www.w3.org/TR/access-control/</a><br><a href="http://dev.w3.org/2006/waf/access-control/" target="_blank" rel="noopener">http://dev.w3.org/2006/waf/access-control/</a></p>
+
+</div>
+
+<div class="footer">
+<h2><a href="/blog">index</a> · <a href="http://weibo.com/340144392/">@胖嘟嘟的骨头</a> <a href="http://www.beian.miit.gov.cn" target="_blank"></a></h2>
+</div>
+
+
+<div style="display:none;">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fcfc45206369293d7cf0fc8142ea83f90' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+
+
+</body>
+</html>

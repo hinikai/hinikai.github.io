@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <title>倪楷-个人博客-web端二进制数据</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/blog.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+</head>
+<body>
+
+<div id="layout" class="post-detail">
+<h1>web端二进制数据</h1>
+<div class="sub">2016年4月5日</div>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>web端有时候也会用到二进制数据，最常见的场景有webgl、canvas、websocket中都有用到，还有有时候数据交互上直接使用二进制数据来传输，然后在前端js解析。</p>
+<h2 id="ajax获取二进制数据"><a href="#ajax获取二进制数据" class="headerlink" title="ajax获取二进制数据"></a>ajax获取二进制数据</h2><p>通过ajax获取二进制数据，只需要如下设置即可： </p>
+<pre><code>req.responseType = &quot;arraybuffer&quot;;
+</code></pre><p>此时拿到的就是ArrayBuffers数据对象</p>
+<h2 id="DataView"><a href="#DataView" class="headerlink" title="DataView"></a>DataView</h2><p>使用包含不同类型数据的ArrayBuffers，最简单的方法是使用一个DataView的缓冲</p>
+<pre><code>var dataView = new DataView(buffer);
+</code></pre><p>如读取一个8位整型</p>
+<pre><code>dataView.getUint8(0); // 0表示读取的指针位置，单位字节
+</code></pre><p>读取一个32位浮点型</p>
+<pre><code>dataView.getFloat32(1); // 1从第一字节处开始读取，32位即4个字节
+</code></pre><p>读取字符串的话，可以在存的时候就存为Unicode编码的字符串</p>
+<pre><code>var unicode = dataView.getInt8(0); // 获取unicode编码，如得到65
+String.fromCharCode(unicode); // unicode65对应得到的字符串就是A
+</code></pre><p>存储一个数组可以这样存储，首先先存储一个数组长度，紧接着存储具体的数据中的值</p>
+<pre><code>var offset = 0;
+
+var count = dataView.getUint32(offset, true); // 数组长度是个32位的整型
+
+offset += 4; // 32位整即占了4个字节
+
+context.beginPath();
+
+for (var i = 0; i &lt; count; i++) {
+
+    var num = dataView.getUint32(offset, true); // 数组中第i个值
+    offset += 4;
+
+}
+</code></pre>
+</div>
+
+<div class="footer">
+<h2><a href="/blog">index</a> · <a href="http://weibo.com/340144392/">@胖嘟嘟的骨头</a> <a href="http://www.beian.miit.gov.cn" target="_blank"></a></h2>
+</div>
+
+
+<div style="display:none;">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fcfc45206369293d7cf0fc8142ea83f90' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+
+
+</body>
+</html>
